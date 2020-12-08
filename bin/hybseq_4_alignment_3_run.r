@@ -36,38 +36,8 @@ rownames(aln) <- gsub("^_R_", "", rownames(aln))
 aln.ng <- deleteEmptyCells(DNAbin=aln)
 # Delete columns and rows with too many gaps
 # Add/replace by ips::gblocks and/or ips::aliscore ?
-aln.ng <- deleteGaps(x=aln.ng, gap.max=round(nrow(aln)/2))
 aln.ng <- del.rowgapsonly(x=aln.ng, threshold=0.3, freq.only=FALSE)
-aln.ng <- del.colgapsonly(x=aln.ng, threshold=0.3, freq.only=FALSE)
 aln.ng
 
 ## Exporting alignment
 write.FASTA(x=aln.ng, file=fnames[2])
-
-## Displaying alignment
-# Alignment
-png(filename=fnames[3], width=2000, height=1000, units="px", bg="white")
-	image.DNAbin(x=(x=as.matrix.DNAbin(x=aln.ng)))
-	dev.off()
-# Checks
-png(filename=fnames[4], width=2000, height=1000, units="px", bg="white")
-	checkAlignment(x=as.matrix.DNAbin(x=aln.ng), check.gaps=TRUE, plot=TRUE, what=1:4)
-	dev.off()
-
-## FastME minimum evolution tree
-# DNA distance
-gdist <- dist.dna(x=aln.ng, model="TN93")
-# NJ tree
-njtr <- fastme.bal(X=gdist, nni=TRUE, spr=TRUE, tbr=TRUE)
-# Bootstrap
-njtr[["node.labels"]] <- boot.phylo(phy=njtr, x=aln.ng, FUN=function(FMT) fastme.bal(X=dist.dna(x=FMT, model="TN93"), nni=TRUE, spr=TRUE, tbr=TRUE), B=1000, quiet=TRUE, mc.cores=1)
-# Export
-write.tree(phy=njtr, file=fnames[5])
-# Plot the tree
-png(filename=fnames[6], width=1200, height=1200, units="px", bg="white")
-	plot.phylo(x=njtr, type="unrooted", edge.width=2, cex=1.1, lab4ut="axial", tip.color="blue")
-	title("FastME minimum evolution tree and bootstrap values (1000 replicates)")
-	add.scale.bar()
-	nodelabels(text=round(njtr[["node.labels"]]/10), frame="none", col="red")
-	dev.off()
-
