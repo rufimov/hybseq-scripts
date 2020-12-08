@@ -18,7 +18,7 @@ library(package=ape, lib.loc="rpackages")
 library(package=ips, lib.loc="rpackages")
 
 ## File names
-fnames <- commandArgs(TRUE) # [1] file.fasta/file.FNA, [2] file.aln.fasta, [3] file.aln.png, [4] file.aln.check.png, [5] file.nwk, [6] file.tree.png
+fnames <- commandArgs(TRUE) # [1] file.fasta/file.FNA, [2] file.aln.fasta
 fnames
 
 ## Load FASTA sequence
