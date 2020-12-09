@@ -51,10 +51,16 @@ R CMD BATCH --no-save --no-restore "--args ${ALNF} ${ALNF%.*}.aln.fasta ${ALNF%.
 rm "${ALNF}" || { export CLEAN_SCRATCH='false'; exit 1; }
 echo
 
+# Delete alignments with less than 75% species missing
+
+if [ $(grep -o '>' ${ALNF%.*}.aln.fasta | wc -l) > ${presence} ]
+then
 # Copy results back to storage
 echo "Copying results back to ${DATADIR}"
 cp -a "${SCRATCHDIR}"/"${ALNF%.*}".* "${DATADIR}"/aligned/ || export CLEAN_SCRATCH='false'
 echo
+fi
+
 
 exit
 
