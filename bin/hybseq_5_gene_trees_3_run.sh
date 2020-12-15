@@ -81,7 +81,7 @@ echo "Constructing gene tree for ${ALN} with IQ-TREE at $(date)"
 # iqtree -s "${ALN}" -st DNA -nt 1 -m MFP+I+R+P -lmap ALL -cmax 1000 -nstop 1000 -alrt 10000 -bb 10000 -bnni || { export CLEAN_SCRATCH='false'; exit 1; }
 raxmlHPC-PTHREADS -T $numbcores -s "${ALN}" -n "${ALN}".bestML -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
 raxmlHPC-PTHREADS -T $numbcores -b 12345 -s "${ALN}" -n "${ALN}".boot -m GTRGAMMA -p 12345 -N 500 >> "${ALN}".raxml.log
-raxmlHPC-PTHREADS -T $numbcores -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
+raxmlHPC-PTHREADS -T $numbcores -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
 echo
 
 exit
