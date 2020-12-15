@@ -53,7 +53,7 @@ echo
 
 # Copy alignments with more than 75% species missing
 
-if [ $(grep -o '>' ${ALNF%.*}.aln.fasta | wc -l) > ${presence} ]
+if [ $(grep -o '>' ${ALNF%.*}.aln.fasta | wc -l) ge ${presence} ] # 20 for Malinae, 7 for Orithorphium, 15 for Amomum
 then
 # Copy results back to storage
 echo "Copying results back to ${DATADIR}"
