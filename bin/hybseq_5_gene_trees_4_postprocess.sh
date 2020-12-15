@@ -33,11 +33,11 @@ echo "Maximum-likelihood trees"
 echo
 echo "Creating lists of trees"
 echo "List of introns"
-find . -name "*.treefile" | sort | grep introns > trees_ml_list_introns.txt || operationfailed
+find . -name "RAxML_bipartitions.*.result" | sort | grep introns > trees_ml_list_introns.txt || operationfailed
 echo "List of supercontigs"
-find . -name "*.treefile" | sort | grep supercontig > trees_ml_list_supercontig.txt || operationfailed
+find . -name "RAxML_bipartitions.*.result" | sort | grep supercontig > trees_ml_list_supercontig.txt || operationfailed
 echo "List of exons"
-find . -name "*.treefile" | sort | grep -v "introns\|supercontig" > trees_ml_list_exons.txt || operationfailed
+find . -name "RAxML_bipartitions.*.result" | sort | grep -v "introns\|supercontig" > trees_ml_list_exons.txt || operationfailed
 echo "Extracting trees"
 echo "Extracting introns"
 while read -r T; do
@@ -61,42 +61,6 @@ paste -d ' ' trees_ml_list_supercontig.txt trees_ml_supercontigs.treefile.tmp > 
 echo "Building list of exons"
 paste -d ' ' trees_ml_list_exons.txt trees_ml_exons.treefile.tmp > trees_ml_exons.nwk || operationfailed
 echo
-echo "Consensus trees"
-echo
-echo "Creating lists of trees"
-echo "List of introns"
-find . -name "*.contree" | sort | grep introns > trees_cons_list_introns.txt || operationfailed
-echo "List of supercontigs"
-find . -name "*.contree" | sort | grep supercontig > trees_cons_list_supercontig.txt || operationfailed
-echo "List of exons"
-find . -name "*.contree" | sort | grep -v "introns\|supercontig" > trees_cons_list_exons.txt || operationfailed
-echo "Extracting trees"
-echo "Extracting introns"
-while read -r T; do
-	cat "${T}" >> trees_cons_introns.contree.tmp || operationfailed
-	done < trees_cons_list_introns.txt
-echo "Extracting supercontigs"
-while read -r T; do
-	cat "${T}" >> trees_cons_supercontigs.contree.tmp || operationfailed
-	done < trees_cons_list_supercontig.txt
-echo "Extracting exons"
-while read -r T; do
-	cat "${T}" >> trees_cons_exons.contree.tmp || operationfailed
-	done < trees_cons_list_exons.txt
-echo "Cleaning tree names"
-sed -i 's/^\.\///;s/\.aln\.fasta//' trees_cons_*.txt || operationfailed
-echo "Building tree lists"
-echo "Building list of introns"
-paste -d ' ' trees_cons_list_introns.txt trees_cons_introns.contree.tmp > trees_cons_introns.nwk || operationfailed
-echo "Building list of supercontigs"
-paste -d ' ' trees_cons_list_supercontig.txt trees_cons_supercontigs.contree.tmp > trees_cons_supercontigs.nwk || operationfailed
-echo "Building list of exons"
-paste -d ' ' trees_cons_list_exons.txt trees_cons_exons.contree.tmp > trees_cons_exons.nwk || operationfailed
-echo
-echo "Removing temporal files"
-rm ./*.tmp ./*.txt || operationfailed
-echo
-
 # Sorting into subdirectories
 echo "Sorting into subdirectories"
 echo "Making directories"
@@ -114,7 +78,6 @@ echo
 # Removing unneeded strings from tree lists
 echo "Removing unneeded strings from tree lists"
 sed -i 's/\.treefile\>//' trees_ml_*.nwk || operationfailed
-sed -i 's/\.contree\>//' trees_cons_*.nwk || operationfailed
 echo
 
 exit
