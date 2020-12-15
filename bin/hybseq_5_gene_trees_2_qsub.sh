@@ -29,6 +29,7 @@ if [ -z "${DATADIR}" ]; then
 # Required modules
 echo "Loading modules"
 module add iqtree-1.6.12 || exit 1 # iqtree
+module add raxml-8.2.4
 echo
 
 # Change working directory
@@ -51,12 +52,12 @@ echo
 
 # Runing the task (trees from individual alignments)
 echo "Computing gene tree from ${ALNA}..."
-./hybseq_5_gene_trees_3_run.sh -a "${ALNA}" | tee hybseq_gene_tree."${ALNA%.*}".log
+./hybseq_5_gene_trees_3_run.sh -a "${ALNA}"
 rm "${ALNA}" || { export CLEAN_SCRATCH='false'; exit 1; }
 echo
 
 # Copy results back to storage
-cp -a "${SCRATCHDIR}"/"${ALNA%.*}"* "${SCRATCHDIR}"/hybseq_gene_tree."${ALNA%.*}".log "${DATADIR}"/trees/ || export CLEAN_SCRATCH='false'
+cp -a "${SCRATCHDIR}"/*.result "${SCRATCHDIR}"/*.log "${DATADIR}"/trees/ || export CLEAN_SCRATCH='false'
 
 exit
 
