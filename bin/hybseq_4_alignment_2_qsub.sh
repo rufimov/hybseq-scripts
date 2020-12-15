@@ -47,7 +47,7 @@ echo
 
 # Runing the task (alignments of individual loci)
 echo "Aligning contig ${ALNF}..."
-R CMD BATCH --no-save --no-restore "--args ${ALNF} ${ALNF%.*}.aln.fasta ${ALNF%.*}.aln.png ${ALNF%.*}.aln.check.png ${ALNF%.*}.nwk ${ALNF%.*}.tree.png" hybseq_4_alignment_3_run.r "${ALNF%.*}".log || { export CLEAN_SCRATCH='false'; exit 1; }
+R CMD BATCH --no-save --no-restore "--args ${ALNF} ${ALNF%.*}.aln.fasta" hybseq_4_alignment_3_run.r "${ALNF%.*}".log || { export CLEAN_SCRATCH='false'; exit 1; }
 rm "${ALNF}" || { export CLEAN_SCRATCH='false'; exit 1; }
 echo
 
