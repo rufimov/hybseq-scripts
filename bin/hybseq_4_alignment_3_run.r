@@ -41,3 +41,16 @@ aln.ng
 
 ## Exporting alignment
 write.FASTA(x=aln.ng, file=fnames[2])
+
+## Exporting alignment
+write.FASTA(x=aln.ng, file=fnames[2])
+
+## Displaying alignment
+# Alignment
+png(filename=fnames[3], width=2000, height=1000, units="px", bg="white")
+	image.DNAbin(x=(x=as.matrix.DNAbin(x=aln.ng)))
+	dev.off()
+# Checks
+png(filename=fnames[4], width=2000, height=1000, units="px", bg="white")
+	checkAlignment(x=as.matrix.DNAbin(x=aln.ng), check.gaps=TRUE, plot=TRUE, what=1:4)
+	dev.off()
