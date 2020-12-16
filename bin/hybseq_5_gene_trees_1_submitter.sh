@@ -21,6 +21,9 @@ DATADIR="/storage/pruhonice1-ibot/shared/oxalis/genus_phylogeny_probes/40_sample
 # DATADIR="/storage/pruhonice1-ibot/shared/oxalis/incarnata/3_aligned"
 # DATADIR="/storage/pruhonice1-ibot/shared/pteronia/hybseq/3_aligned"
 
+# Number of cores
+ncpu=6
+
 # Submitting individual tasks
 
 # Go to working directory
@@ -39,7 +42,7 @@ echo
 for ALN in $(find . -name "*.aln.fasta" | sed 's/^\.\///' | sort); do
 	ALNB="$(basename "${ALN}")"
 	echo "Processing ${ALNB}"
-	qsub -l walltime=24:0:0 -l select=1:ncpus=1:mem=16gb:scratch_local=1gb -q ibot -N HybSeq.genetree."${ALNB%.*}" -v WORKDIR="${WORKDIR}",DATADIR="${DATADIR}",ALNF="${ALN}" ~/hybseq/bin/hybseq_5_gene_trees_2_qsub.sh || exit 1
+	qsub -l walltime=12:0:0 -l select=1:ncpus="${ncpu}":mem=8gb:scratch_local=1gb -N HybSeq.genetree."${ALNB%.*}" -v WORKDIR="${WORKDIR}",DATADIR="${DATADIR}",ALNF="${ALN}",ncpu="${ncpu}" ${WORKDIR}/bin/hybseq_5_gene_trees_2_qsub.sh || exit 1
 	echo
 	done
 
