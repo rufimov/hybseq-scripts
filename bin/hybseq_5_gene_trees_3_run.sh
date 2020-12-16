@@ -41,6 +41,7 @@ while getopts "hva:" INITARGS; do
 			;;
 		n) # Number of cores
 			ncpu="${OPTARG}"
+			;;
 		*)
 			echo "Error! Unknown option!"
 			echo "See usage options: \"$0 -h\""
