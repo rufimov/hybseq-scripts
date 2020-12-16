@@ -39,6 +39,8 @@ while getopts "hva:" INITARGS; do
 					exit 1
 					fi
 			;;
+		n) # Number of cores
+			ncpu="${OPTARG}"
 		*)
 			echo "Error! Unknown option!"
 			echo "See usage options: \"$0 -h\""
@@ -77,11 +79,14 @@ if [ -z "${ALN}" ]; then
 	fi
 
 # Construct gene trees with IQ-TREE from *.aln.fasta alignments
-echo "Constructing gene tree for ${ALN} with IQ-TREE at $(date)"
+# echo "Constructing gene tree for ${ALN} with IQ-TREE at $(date)"
 # iqtree -s "${ALN}" -st DNA -nt 1 -m MFP+I+R+P -lmap ALL -cmax 1000 -nstop 1000 -alrt 10000 -bb 10000 -bnni || { export CLEAN_SCRATCH='false'; exit 1; }
-raxmlHPC-PTHREADS -T 1 -s "${ALN}" -n "${ALN}".bestML -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
-raxmlHPC-PTHREADS -T 1 -b 12345 -s "${ALN}" -n "${ALN}".boot -m GTRGAMMA -p 12345 -N 500 >> "${ALN}".raxml.log
-raxmlHPC-PTHREADS -T 1 -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
+
+# Construct gene trees with RAxML from *.aln.fasta alignments
+echo "Constructing gene tree for ${ALN} with RAxML at $(date)"
+raxmlHPC-PTHREADS -T "${ncpu}" -s "${ALN}" -n "${ALN}".bestML -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
+raxmlHPC-PTHREADS -T "${ncpu}" -b 12345 -s "${ALN}" -n "${ALN}".boot -m GTRGAMMA -p 12345 -N 500 >> "${ALN}".raxml.log
+raxmlHPC-PTHREADS -T "${ncpu}" -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
 echo
 
 exit
