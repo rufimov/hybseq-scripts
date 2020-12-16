@@ -52,7 +52,7 @@ echo
 
 # Runing the task (trees from individual alignments)
 echo "Computing gene tree from ${ALNA}..."
-./hybseq_5_gene_trees_3_run.sh -a "${ALNA}"
+./hybseq_5_gene_trees_3_run.sh -a "${ALNA}" "${ncpu}"
 rm "${ALNA}" || { export CLEAN_SCRATCH='false'; exit 1; }
 echo
 
