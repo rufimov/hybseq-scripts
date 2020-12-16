@@ -41,26 +41,17 @@ find . -name "RAxML_bipartitions.*.result" | sort | grep -v "introns\|superconti
 echo "Extracting trees"
 echo "Extracting introns"
 while read -r T; do
-	cat "${T}" >> trees_ml_introns.treefile.tmp || operationfailed
+	cat "${T}" >> trees_ml_introns.nwk || operationfailed
 	done < trees_ml_list_introns.txt
 echo "Extracting supercontigs"
 while read -r T; do
-	cat "${T}" >> trees_ml_supercontigs.treefile.tmp || operationfailed
+	cat "${T}" >> trees_ml_supercontigs.nwk || operationfailed
 	done < trees_ml_list_supercontig.txt
 echo "Extracting exons"
 while read -r T; do
-	cat "${T}" >> trees_ml_exons.treefile.tmp || operationfailed
+	cat "${T}" >> trees_ml_exons.nwk || operationfailed
 	done < trees_ml_list_exons.txt
-echo "Cleaning tree names"
-sed -i 's/^\.\///;s/\.aln\.fasta//' trees_ml_*.txt || operationfailed
-echo "Building tree lists"
-echo "Building list of introns"
-paste -d ' ' trees_ml_list_introns.txt trees_ml_introns.treefile.tmp > trees_ml_introns.nwk || operationfailed
-echo "Building list of supercontigs"
-paste -d ' ' trees_ml_list_supercontig.txt trees_ml_supercontigs.treefile.tmp > trees_ml_supercontigs.nwk || operationfailed
-echo "Building list of exons"
-paste -d ' ' trees_ml_list_exons.txt trees_ml_exons.treefile.tmp > trees_ml_exons.nwk || operationfailed
-echo
+
 # Sorting into subdirectories
 echo "Sorting into subdirectories"
 echo "Making directories"
@@ -73,11 +64,6 @@ echo "Moving exons"
 find . -maxdepth 1 -type f -exec mv '{}' exons/ \; || operationfailed
 echo "Moving tree lists"
 mv exons/*.nwk introns/*.nwk supercontigs/*.nwk . || operationfailed
-echo
-
-# Removing unneeded strings from tree lists
-echo "Removing unneeded strings from tree lists"
-sed -i 's/\.treefile\>//' trees_ml_*.nwk || operationfailed
 echo
 
 exit
