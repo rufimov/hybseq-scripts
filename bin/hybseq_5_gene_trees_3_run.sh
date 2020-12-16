@@ -11,7 +11,7 @@
 # Processing variables
 
 # Parse initial arguments
-while getopts "hva:" INITARGS; do
+while getopts "hvan:" INITARGS; do
 	case "${INITARGS}" in
 		h) # Help and exit
 			echo "Usage options:"
