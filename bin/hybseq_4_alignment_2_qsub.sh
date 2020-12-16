@@ -25,6 +25,10 @@ if [ -z "${DATADIR}" ]; then
 	echo "Error! Directory with data to process not provided!"
 	exit 1
 	fi
+if [ -z "${presence}" ]; then
+	echo "Error! Presence of samples in alignments not provided!"
+	exit 1
+	fi
 
 # Required modules
 echo "Loading modules"
