@@ -30,7 +30,7 @@ while getopts "hvan:" INITARGS; do
 			;;
 		a) # Reference bait FASTA file
 			if [ -r "${OPTARG}" ]; then
-				ALN="$(realpath "${OPTARG}")"
+				ALN="${OPTARG}"
 				echo "Input alignment in FASTA format to use for gene tree construction: ${ALN}"
 				echo
 				else
@@ -41,6 +41,7 @@ while getopts "hvan:" INITARGS; do
 			;;
 		n) # Number of cores
 			ncpu="${OPTARG}"
+			echo "${ncpu} cores used"
 			;;
 		*)
 			echo "Error! Unknown option!"
@@ -71,23 +72,17 @@ function toolcheck {
 		}
 	}
 
-toolcheck iqtree
-
 # Checking if all required variables are provided
 if [ -z "${ALN}" ]; then
 	echo "Error! Input alignment in FASTA format to use for gene tree construction not provided!"
 	operationfailed
 	fi
 
-# Construct gene trees with IQ-TREE from *.aln.fasta alignments
-# echo "Constructing gene tree for ${ALN} with IQ-TREE at $(date)"
-# iqtree -s "${ALN}" -st DNA -nt 1 -m MFP+I+R+P -lmap ALL -cmax 1000 -nstop 1000 -alrt 10000 -bb 10000 -bnni || { export CLEAN_SCRATCH='false'; exit 1; }
-
 # Construct gene trees with RAxML from *.aln.fasta alignments
 echo "Constructing gene tree for ${ALN} with RAxML at $(date)"
-raxmlHPC-PTHREADS -T "${ncpu}" -s "${ALN}" -n "${ALN}".bestML -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
-raxmlHPC-PTHREADS -T "${ncpu}" -b 12345 -s "${ALN}" -n "${ALN}".boot -m GTRGAMMA -p 12345 -N 500 >> "${ALN}".raxml.log
-raxmlHPC-PTHREADS -T "${ncpu}" -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log
+raxmlHPC-PTHREADS -T "${ncpu}" -s "${ALN}" -n "${ALN}".bestML -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log | operationfailed
+raxmlHPC-PTHREADS -T "${ncpu}" -b 12345 -s "${ALN}" -n "${ALN}".boot -m GTRGAMMA -p 12345 -N 500 >> "${ALN}".raxml.log | operationfailed
+raxmlHPC-PTHREADS -T "${ncpu}" -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log | operationfailed
 echo
 
 exit
