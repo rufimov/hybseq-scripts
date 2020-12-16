@@ -23,7 +23,7 @@ DATADIR="/storage/pruhonice1-ibot/shared/oxalis/incarnata/2_seqs"
 # DATADIR="/storage/pruhonice1-ibot/shared/pteronia/hybseq/2_seqs"
 
 #Minumum number of sequences allowed in the alignments
-presence=20
+presence=20 # 20 for Malinae, 7 for Orithorphium, 15 for Amomum
 
 # Submitting individual tasks
 
@@ -48,7 +48,7 @@ echo
 for ALN in $(find . -maxdepth 1 -name "*.FNA" -o -name "*.fasta" | sort); do
 	ALNB="$(basename "${ALN}")"
 	echo "Processing ${ALNB}"
-	qsub -l walltime=4:0:0 -l select=1:ncpus=1:mem=8gb:scratch_local=1gb -q ibot -N HybSeq.alignment."${ALNB%.*}" -v WORKDIR="${WORKDIR}",DATADIR="${DATADIR}",ALNF="${ALNB}",presence="${presence}" ~/hybseq/bin/hybseq_4_alignment_2_qsub.sh || exit 1
+	qsub -l walltime=4:0:0 -l select=1:ncpus=1:mem=8gb:scratch_local=1gb -N HybSeq.alignment."${ALNB%.*}" -v WORKDIR="${WORKDIR}",DATADIR="${DATADIR}",ALNF="${ALNB}",presence="${presence}" ~/hybseq/bin/hybseq_4_alignment_2_qsub.sh || exit 1
 	echo
 	done
 
