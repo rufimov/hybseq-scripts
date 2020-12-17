@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Author: Vojtěch Zeisek, https://trapa.cz/
-# License: GNU General Public License 3.0, https://www.gnu.org/licenses/gpl-3.0.html
-
-# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-# qsub -l walltime=12:0:0 -l select=1:ncpus=1:mem=8gb:scratch_local=1gb -q ibot -m abe -N HybSeq.genetree."${ALNB%.*}" -v WORKDIR="${WORKDIR}",DATADIR="${DATADIR}",ALNF="${ALN}" ~/hybseq/bin/hybseq_5_gene_trees_2_qsub.sh
 
 # Clean-up of SCRATCH
 trap 'clean_scratch' TERM EXIT
@@ -28,8 +21,7 @@ if [ -z "${DATADIR}" ]; then
 
 # Required modules
 echo "Loading modules"
-module add iqtree-1.6.12 || exit 1 # iqtree
-module add raxml-8.2.4
+module add raxml-8.2.4 || exit 1 # raxml
 echo
 
 # Change working directory

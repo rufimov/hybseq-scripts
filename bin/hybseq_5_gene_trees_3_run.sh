@@ -1,17 +1,9 @@
 #!/bin/bash
 
-# Author: Vojtěch Zeisek, https://trapa.cz/
-# License: GNU General Public License 3.0, https://www.gnu.org/licenses/gpl-3.0.html
-
-# See './hybseq_5_gene_trees_3_run.sh -h' for help.
-
-# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
 # Processing variables
 
 # Parse initial arguments
-while getopts "hvan:" INITARGS; do
+while getopts "hva:n:" INITARGS; do
 	case "${INITARGS}" in
 		h) # Help and exit
 			echo "Usage options:"
@@ -63,14 +55,6 @@ function operationfailed {
 	exit 1
 	}
 
-# Check if all required binaries are available
-function toolcheck {
-	command -v "$1" >/dev/null 2>&1 || {
-		echo >&2 "Error! $1 is required but not installed. Aborting. Please, install it."
-		echo
-		operationfailed
-		}
-	}
 
 # Checking if all required variables are provided
 if [ -z "${ALN}" ]; then
@@ -82,7 +66,7 @@ if [ -z "${ALN}" ]; then
 echo "Constructing gene tree for ${ALN} with RAxML at $(date)"
 raxmlHPC-PTHREADS -T "${ncpu}" -s "${ALN}" -n "${ALN}".bestML -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log | operationfailed
 raxmlHPC-PTHREADS -T "${ncpu}" -b 12345 -s "${ALN}" -n "${ALN}".boot -m GTRGAMMA -p 12345 -N 500 >> "${ALN}".raxml.log | operationfailed
-raxmlHPC-PTHREADS -T "${ncpu}" -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log | operationfailed
+raxmlHPC-PTHREADS -T "${ncpu}" -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log |operationfailed
 echo
 
 exit

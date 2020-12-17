@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# Author: Vojtěch Zeisek, https://trapa.cz/
-# License: GNU General Public License 3.0, https://www.gnu.org/licenses/gpl-3.0.html
-
-# Provide single argument: directory with aligned contigs to sort. Alignments will be sorted into directories for exons, introns and supercontigs, statistics will be calculated and lists of NJ trees created.
-
-# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
 # Checking if exactly one variables is provided
 if [ "$#" -ne '1' ]; then
 	echo "Error! Exactly 1 parameter (directory with aligned sequences to process) is required! $# parameters received."
@@ -69,39 +61,7 @@ echo "List of alignments according to their size"
 find . -type f -name "*aln.fasta" -printf '%k KB %p\n' | sort -n || operationfailed
 echo
 
-# Inserting trees into tree lists
-echo "Creating lists of trees"
-echo "List of introns"
-find . -name "*.nwk" | sort | grep introns > trees_list_introns.txt || operationfailed
-echo "List of supercontigs"
-find . -name "*.nwk" | sort | grep supercontig > trees_list_supercontig.txt || operationfailed
-echo "List of exons"
-find . -name "*.nwk" | sort | grep -v "introns\|supercontig" > trees_list_exons.txt || operationfailed
-echo "Extracting trees"
-echo "Extracting introns"
-while read -r T; do
-	cat "${T}" >> trees_introns.nwk.tmp
-	done < trees_list_introns.txt
-echo "Extracting supercontigs"
-while read -r T; do
-	cat "${T}" >> trees_supercontigs.nwk.tmp
-	done < trees_list_supercontig.txt
-echo "Extracting exons"
-while read -r T; do
-	cat "${T}" >> trees_exons.nwk.tmp
-	done < trees_list_exons.txt
-echo "Removing \".nwk\" from tree names"
-sed -i 's/^\.\///;s/\.nwk//' trees_*.txt || operationfailed
-echo "Building tree lists"
-echo "Building list of introns"
-paste -d ' ' trees_list_introns.txt trees_introns.nwk.tmp > trees_introns.nwk || operationfailed
-echo "Building list of supercontigs"
-paste -d ' ' trees_list_supercontig.txt trees_supercontigs.nwk.tmp > trees_supercontigs.nwk || operationfailed
-echo "Building list of exons"
-paste -d ' ' trees_list_exons.txt trees_exons.nwk.tmp > trees_exons.nwk || operationfailed
-echo "Removing temporal files"
-rm ./*.tmp ./*.txt || operationfailed
-echo
+
 
 # Sorting into subdirectories
 echo "Sorting into subdirectories"
@@ -114,14 +74,7 @@ find . -maxdepth 1 -type f -name "*supercontig*" -exec mv '{}' supercontigs/ \; 
 echo "Moving exons"
 find . -maxdepth 1 -type f -exec mv '{}' exons/ \; || operationfailed
 echo
-echo "Moving lists of NJ trees"
-echo "Exons"
-mv exons/trees_exons.nwk . || operationfailed
-echo "Introns"
-mv introns/trees_introns.nwk . || operationfailed
-echo "Supercontig"
-mv supercontigs/trees_supercontigs.nwk . || operationfailed
-echo
+
 
 # Statistics of alignments
 echo "Extracting alignment statistics"
@@ -165,4 +118,3 @@ echo "Moving statistics files"
 mv exons/presence_of_samples_in_exons.tsv introns/presence_of_samples_in_introns.tsv supercontigs/presence_of_samples_in_supercontigs.tsv . || operationfailed
 
 exit
-

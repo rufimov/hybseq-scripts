@@ -1,25 +1,12 @@
 #!/bin/bash
 
-# Author: Vojtěch Zeisek, https://trapa.cz/
-# License: GNU General Public License 3.0, https://www.gnu.org/licenses/gpl-3.0.html
-
-# Computes gene trees for all aligned contigs named *.aln.fasta (output of hybseq_4_alignment_1_submitter.sh and following scripts) in DATADIR and all subdirectories, for each of them submits job using qsub to process the sample with IQ-TREE.
-
-# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
 # Setting initial variables
 
 # Set data directories
-WORKDIR="/storage/pruhonice1-ibot/home/${LOGNAME}/hybseq"
+WORKDIR="/storage/plzen1/home/${LOGNAME}/Test_run_malinae_probes"
 
 # Data to process
-# DATADIR="/storage/pruhonice1-ibot/shared/oxalis/genus_phylogeny_probes/40_samples_kew_probes/3_aligned/"
-DATADIR="/storage/pruhonice1-ibot/shared/oxalis/genus_phylogeny_probes/40_samples_red_soa_probes/3_aligned"
-# DATADIR="/storage/pruhonice1-ibot/shared/oxalis/genus_phylogeny_probes/40_samples_soa_probes/3_aligned"
-# DATADIR="/storage/pruhonice1-ibot/shared/oxalis/genus_phylogeny_probes/90_samples_kew_probes/3_aligned"
-# DATADIR="/storage/pruhonice1-ibot/shared/oxalis/incarnata/3_aligned"
-# DATADIR="/storage/pruhonice1-ibot/shared/pteronia/hybseq/3_aligned"
+DATADIR="/storage/plzen1/home/${LOGNAME}/Test_run_malinae_probes/3_aligned"
 
 # Number of cores
 ncpu=6

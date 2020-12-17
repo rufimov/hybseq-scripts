@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# Author: Vojtěch Zeisek, https://trapa.cz/
-# License: GNU General Public License 3.0, https://www.gnu.org/licenses/gpl-3.0.html
-
-# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-# qsub -l walltime=4:0:0 -l select=1:ncpus=1:mem=6gb:scratch_local=1gb -q ibot -m abe -N HybSeq.alignment."${ALNB%.*}" -v WORKDIR="${WORKDIR}",DATADIR="${DATADIR}",ALNF="${ALNB}" ~/hybseq/bin/hybseq_4_alignment_2_qsub.sh
-
 # Clean-up of SCRATCH
 trap 'clean_scratch' TERM EXIT
 trap 'cp -ar $SCRATCHDIR $DATADIR/; clean_scratch' TERM
@@ -25,8 +17,9 @@ if [ -z "${DATADIR}" ]; then
 	echo "Error! Directory with data to process not provided!"
 	exit 1
 	fi
+
 if [ -z "${presence}" ]; then
-	echo "Error! Presence of samples in alignments not provided!"
+	echo "Error! Presence of samples in the alignments not specified!"
 	exit 1
 	fi
 
@@ -55,9 +48,9 @@ R CMD BATCH --no-save --no-restore "--args ${ALNF} ${ALNF%.*}.aln.fasta" hybseq_
 rm "${ALNF}" || { export CLEAN_SCRATCH='false'; exit 1; }
 echo
 
-# Copy alignments with more than 75% species missing
+# Copy alignments with more than ${presence} sequences in the alignment
 
-if [ $(grep -o '>' ${ALNF%.*}.aln.fasta | wc -l) -ge ${presence} ]
+if [ $(grep -o '>' ${ALNF%.*}.aln.fasta | wc -l) -ge ${presence} ] 
 then
 # Copy results back to storage
 echo "Copying results back to ${DATADIR}"
