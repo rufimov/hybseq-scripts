@@ -64,8 +64,8 @@ if [ -z "${ALN}" ]; then
 
 # Construct gene trees with RAxML from *.aln.fasta alignments
 echo "Constructing gene tree for ${ALN} with RAxML at $(date)"
-raxmlHPC-PTHREADS -T "${ncpu}" -s "${ALN}" -n "${ALN}".bestML -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log | operationfailed
-raxmlHPC-PTHREADS -T "${ncpu}" -b 12345 -s "${ALN}" -n "${ALN}".boot -m GTRGAMMA -p 12345 -N 500 >> "${ALN}".raxml.log | operationfailed
+raxmlHPC-PTHREADS -T "${ncpu}" -s "${ALN}" -n "${ALN}".bestML -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log || operationfailed
+raxmlHPC-PTHREADS -T "${ncpu}" -b 12345 -s "${ALN}" -n "${ALN}".boot -m GTRGAMMA -p 12345 -N 500 >> "${ALN}".raxml.log || operationfailed
 raxmlHPC-PTHREADS -T "${ncpu}" -f b -t RAxML_bestTree."${ALN}".bestML -z RAxML_bootstrap."${ALN}".boot -n "${ALN}".result -m GTRGAMMA -p 12345 >> "${ALN}".raxml.log |operationfailed
 echo
 
